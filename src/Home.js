@@ -6,6 +6,7 @@ import './Home.css';
 function Home({ onLogout, setCart, cart }) {
     const [products, setProducts] = useState([]);
     const [currentImageIndices, setCurrentImageIndices] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -53,6 +54,11 @@ function Home({ onLogout, setCart, cart }) {
         navigate('/login');
     };
 
+    // Filter products based on the search term
+    const filteredProducts = products.filter(product =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div>
             <h2>Products</h2>
@@ -62,8 +68,16 @@ function Home({ onLogout, setCart, cart }) {
             <div className="logout-button">
                 <button onClick={handleLogout}>Logout</button>
             </div>
+            <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
             <div className="product-list">
-                {products.map((product, index) => (
+                {filteredProducts.map((product, index) => (
                     <div key={index} className="product">
                         <h3>{product.title}</h3>
                         <p>Price: ${product.price}</p>
