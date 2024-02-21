@@ -12,6 +12,9 @@ function App() {
     const handleLogin = () => {
         setIsLoggedIn(true);
     };
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+    };
 
     const removeFromCart = (productId) => {
       const updatedCart = cart.filter(item => item.id !== productId);
@@ -22,7 +25,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/login" element={isLoggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
-                <Route path="/" element={isLoggedIn ? <Home cart={cart} setCart={setCart}/> : <Navigate to="/login" />} />
+                <Route path="/" element={isLoggedIn ? <Home onLogout={handleLogout} cart={cart} setCart={setCart}/> : <Navigate to="/login" />} />
                 <Route exact path="/cart" element={isLoggedIn ? <Cart cart={cart} removeFromCart={removeFromCart}/> : <Navigate to="/login"/>} />
             </Routes>
         </Router>

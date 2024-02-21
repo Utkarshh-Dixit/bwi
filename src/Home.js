@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 
-function Home({setCart, cart}) {
+function Home({ onLogout, setCart, cart }) {
     const [products, setProducts] = useState([]);
     const [currentImageIndices, setCurrentImageIndices] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -13,7 +14,7 @@ function Home({setCart, cart}) {
                 const response = await axios.get('https://dummyjson.com/products');
                 const { products } = response.data;
                 setProducts(products);
-                
+
                 const initialImageIndices = {};
                 products.forEach(product => {
                     initialImageIndices[product.id] = 0;
@@ -42,16 +43,24 @@ function Home({setCart, cart}) {
     };
 
     const handleAddToCart = (productId) => {
-      const selectedProduct = products.find(product => product.id === productId);
-      setCart(prevCart => [...prevCart, selectedProduct]);
-  };
-  
+        const selectedProduct = products.find(product => product.id === productId);
+        setCart(prevCart => [...prevCart, selectedProduct]);
+    };
+
+    const handleLogout = () => {
+        onLogout();
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
 
     return (
         <div>
             <h2>Products</h2>
             <div className="cart-button">
                 <Link to="/cart">Cart ({cart.length})</Link>
+            </div>
+            <div className="logout-button">
+                <button onClick={handleLogout}>Logout</button>
             </div>
             <div className="product-list">
                 {products.map((product, index) => (
